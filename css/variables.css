@@ -1,0 +1,33 @@
+:root {
+    /*Typography*/
+    font-family: 'Outfit', sans-serif;
+    /*Font size*/
+    --fs-l: 2.5rem;
+    --fs-m: 1.5rem;
+    --fs-s: 1.3rem;
+    --fs-xs: 1rem;
+    --fs-b: 0.8rem;
+    /*Font weight*/
+    --fw-bold: 700;
+    --fw-medium: 500;
+    /*Letter spacing*/
+    --ls-l: 2.5px;
+    --ls-m: 1.5px;
+    --ls-s: 1.25px;
+    --ls-xs: 1px;
+    --ls-b: 0.88px;
+
+    /*Colors*/
+    --clr-primary-dark: 202 32% 15%;
+    --clr-primary-light: 199 35% 19%;
+    --clr-secondary-dark: 198 23% 72%;
+    --clr-secondary-light: 197 33% 89%;
+    --clr-accent-one: 178 75% 65%;
+    --clr-accent-two: 39 100% 69%;
+    --clr-shadow-one: 178 60% 48%;
+    --clr-shadow-two: 39 88% 58%;
+
+    /*Border radius*/
+    --br: 10px;
+    --br-s: 5px;
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/game-board.css">
+</head>
+
+<body>
+    <main class="container">
+        <div class="game-board">
+
+            <div class="logo">
+                <img src="./assets/logo.svg" alt="logo" height="32">
+            </div>
+            <div class="turn-indicator">
+                <span id="icon"><img src="./assets/icon-x.svg" alt="X"></span>
+                <p>Turn</p>
+            </div>
+            <div class="restart">
+                <button type="button" class="restart-btn" id="restart-btn">
+                    <img src="./assets/icon-restart.svg" alt="restart icon">
+                </button>
+            </div>
+
+            <div class="game-cells" id="1" data-id="cell"></div>
+            <div class="game-cells" id="2" data-id="cell"></div>
+            <div class="game-cells" id="3" data-id="cell"></div>
+            <div class="game-cells" id="4" data-id="cell"></div>
+            <div class="game-cells" id="5" data-id="cell"></div>
+            <div class="game-cells" id="6" data-id="cell"></div>
+            <div class="game-cells" id="7" data-id="cell"></div>
+            <div class="game-cells" id="8" data-id="cell"></div>
+            <div class="game-cells" id="9" data-id="cell"></div>
+
+            <div class="scores score_player-one">
+                <p class="score_text">X <span>(P1)</span></p>
+                <p class="score_number">14</p>
+            </div>
+            <div class="scores score_draw">
+                <p class="score_text">Ties</p>
+                <p class="score_number">20</p>
+            </div>
+            <div class="scores score_player-two">
+                <p class="score_text">0 <span>(CPU)</span></p>
+                <p class="score_number">5</p>
+            </div>
+
+        </div>
+    </main>
+    <script src="./js/script.js"></script>
+    <!-- <script src="./js/test.js"></script>-->
+    <!--<script src="./js/game.js"></script>-->
+</body>
+
+</html>
