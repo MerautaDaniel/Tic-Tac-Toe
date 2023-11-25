@@ -1,48 +1,40 @@
 const players = [
   {
-    playerName: "playerOne",
+    playerName: "player 1",
     value: null,
-    moves: false,
+    moves: true,
   },
   {
-    playerName: "playerTwo",
+    playerName: "player 2",
     value: null,
     moves: false,
   },
 ];
+//DOM variables
+const xBtnEl = document.getElementById("x_btn");
+const oBtnEl = document.getElementById("o_btn");
+const vsCpuEl = document.getElementById("vsCPU");
+const vsPlayerEl = document.getElementById("vsPlayer");
 
-const actionButtons = document.querySelectorAll(".action-btn");
-const buttons = document.querySelectorAll(".choice");
-buttons.forEach((button) => {
-  button.addEventListener("click", (e) => {
-    if (button.value === "X") {
-      players[0].value = button.value;
-      players[0].moves = true;
-      players[1].value = "0";
-      localStorage.setItem("players", JSON.stringify(players));
-      disableButtons();
-      return;
-    }
-    if (button.value === "0") {
-      players[0].value = button.value;
-      players[1].value = "X";
-      players[1].moves = true;
-      localStorage.setItem("players", JSON.stringify(players));
-      disableButtons();
-      return;
-    }
-  });
+//Set initial status
+//Only X button will be available for the player to click
+oBtnEl.disabled = true;
+vsCpuEl.disabled = true;
+vsPlayerEl.disabled = true;
+
+//Event listeners
+xBtnEl.addEventListener("click", () => {
+  //set the player
+  players[0].value = "X";
+  players[1].value = "0";
+  console.log(players);
+  //enable the game type
+  vsPlayerEl.disabled = false;
 });
 
-function disableButtons() {
-  buttons.forEach((button) => {
-    button.disabled = true;
-  });
-}
-
-actionButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    localStorage.setItem("players", JSON.stringify(players));
-    window.location = "./game-board.html";
-  });
+vsPlayerEl.addEventListener("click", () => {
+  //save the players to local storage
+  localStorage.setItem("players", JSON.stringify(players));
+  //go to the game-board page
+  window.location = "./game-board.html";
 });

@@ -36,20 +36,45 @@
             <div class="game-cells" id="9" data-id="cell"></div>
 
             <div class="scores score_player-one">
-                <p class="score_text">X <span>(P1)</span></p>
-                <p class="score_number">14</p>
+                <p class="score_text">X (<span data-id="first_player-name"></span>)</p>
+                <p class="score_number" data-id="X-Score">0</p>
             </div>
             <div class="scores score_draw">
                 <p class="score_text">Ties</p>
-                <p class="score_number">20</p>
+                <p class="score_number" data-id="draw">0</p>
             </div>
             <div class="scores score_player-two">
-                <p class="score_text">0 <span>(CPU)</span></p>
-                <p class="score_number">5</p>
+                <p class="score_text">0 (<span data-id="second_player-name"></span>)</p>
+                <p class="score_number" data-id="0-Score">0</p>
             </div>
 
         </div>
     </main>
+
+
+    <section class="modal_wrapper hidden" data-id="modal_wrapper">
+        <div class="modal" data-id="modal">
+            <div class="modal_content" id="modal_content">
+
+            </div>
+            <div class="modal_actions">
+                <button class="secondary-btn" data-id="quit">Quit</button>
+                <button class="primary-btn" data-id="new-round">Next Round</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="modal_wrapper hidden" data-id="refresh_modal">
+        <div class="modal">
+            <h2 class="modal_title">Restart Game?</h2>
+            <div class="modal_actions">
+                <button class="secondary-btn" data-id="continue">No, cancel</button>
+                <button class="primary-btn" data-id="cancel">Yes, restart</button>
+            </div>
+        </div>
+    </section>
+
+
     <script src="./js/script.js"></script>
     <!-- <script src="./js/test.js"></script>-->
     <!--<script src="./js/game.js"></script>-->

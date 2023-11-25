@@ -134,6 +134,95 @@
     font-size: var(--fs-b);
 }
 
+/*Modal*/
+.modal_wrapper {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background: hsl(var(--clr-primary-dark));
+    width: 100%;
+    padding-block: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modal_content {
+    text-align: center;
+}
+
+.modal_content>p:first-child {
+    margin-bottom: 1rem;
+}
+
+.modal_player-name {
+    text-transform: uppercase;
+    letter-spacing: var(--ls-b);
+    font-size: var(--fs-b);
+    color: hsl(var(--clr-secondary-dark));
+}
+
+.modal_title {
+    text-transform: uppercase;
+    font-size: var(--fs-m);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-m);
+}
+
+.modal_player-icon {
+    margin-right: 1rem;
+}
+
+.modal_title__player-X-color {
+    color: hsl(var(--clr-accent-one));
+}
+
+.modal_title__player-0-color {
+    color: hsl(var(--clr-accent-two));
+}
+
+.modal_actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.modal_actions button {
+    border-radius: 10px;
+    padding-block: 1rem;
+    padding-inline: 1.5rem;
+    text-transform: uppercase;
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-xs);
+    margin-top: 0.5rem;
+    color: hsl(var(--clr-primary-dark));
+}
+
+.secondary-btn {
+    background-color: hsl(var(--clr-secondary-light));
+    box-shadow: 0 8px 0 0 hsl(var(--clr-secondary-dark));
+}
+
+.primary-btn {
+    background-color: hsl(var(--clr-accent-two));
+    box-shadow: 0 8px 0 0 hsl(var(--clr-shadow-two));
+}
+
+
+
 @media(min-width:480px) {
     .game-board {
         max-width: 460px;

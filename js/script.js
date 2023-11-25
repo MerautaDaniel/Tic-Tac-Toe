@@ -1,5 +1,20 @@
 //DOM Elements
 const cellsElements = document.querySelectorAll('[data-id="cell"]');
+const modalElement = document.querySelector('[data-id="modal"]');
+const modalWrapper = document.querySelector('[data-id="modal_wrapper"]');
+const modalContentElement = modalElement.querySelector(".modal_content");
+const spanElementFPlayer = document.querySelector(`[data-id="first_player-name"]`);
+const spanElementSPlayer = document.querySelector(`[data-id="second_player-name"]`);
+const spanXScore = document.querySelector(`[data-id="X-Score"]`);
+const span0Score = document.querySelector(`[data-id="0-Score"]`);
+const spanDrawScore = document.querySelector(`[data-id="draw"]`);
+const quitBtnEl = document.querySelector(`[data-id="quit"]`);
+const newRoundBtnEl = document.querySelector(`[data-id="new-round"]`);
+
+const btnEl = document.getElementById("restart-btn");
+const refreshModalEl = document.querySelector(`[data-id="refresh_modal"]`);
+const cancelBtnEl = document.querySelector(`[data-id="cancel"]`);
+const continueBtnEl = document.querySelector(`[data-id="continue"]`);
 
 /*Get data from local storage */
 const retrievedPlayers = localStorage.getItem("players");
@@ -10,7 +25,10 @@ let secondPlayer = getOPlayer();
 
 const game = {
   currentPlayer: firstPlayer,
-  isXTurn: true, //true | false
+  isXTurn: true,
+  XWins: 0,
+  OWins: 0,
+  ties: 0,
   moves: [],
   winning_combinations: [
     [1, 2, 3],
@@ -24,15 +42,76 @@ const game = {
   ],
 };
 
+/*Event Listeners*/
+btnEl.addEventListener("click", openRefreshModal);
+cancelBtnEl.addEventListener("click", cancelGame);
+continueBtnEl.addEventListener("click", continueGame);
+quitBtnEl.addEventListener("click", quitCurrentGame);
+newRoundBtnEl.addEventListener("click", newRound);
+
+/*Start Game*/
 startGame();
 
+/*New Round*/
+function newRound() {
+  //remove the modal
+  modalWrapper.classList.add("hidden");
+  //reset game status
+  cellsElements.forEach((cell) => {
+    cell.removeAttribute("busy");
+    cell.classList.remove("x_confirmed", "o_confirmed", "x_wins", "o_wins", "x", "o");
+  });
+  game.moves = [];
+  modalContentElement.innerHTML = "";
+  startGame();
+}
+/*Quit the game -> return to index.html*/
+function quitCurrentGame() {
+  window.location = "./index.html";
+}
+/*Open the modal to continue a game or to start a new one */
+function openRefreshModal() {
+  refreshModalEl.classList.remove("hidden");
+}
+
+/*Allow to start a new game canceling the previous game*/
+function cancelGame() {
+  console.log("The game will be canceled");
+  refreshModalEl.classList.add("hidden");
+  localStorage.removeItem("gameSaved");
+  game.XWins = 0;
+  game.OWins = 0;
+  game.ties = 0;
+  spanXScore.innerText = game.XWins;
+  span0Score.innerText = game.OWins;
+  spanDrawScore.innerText = game.ties;
+}
+
+function continueGame() {
+  console.log("Game will continue");
+  refreshModalEl.classList.add("hidden");
+  console.log("New round is about to begin...");
+  let game = getGame();
+  //Populate the score board
+  if (game) {
+    spanXScore.innerText = game.XWins;
+    span0Score.innerText = game.OWins;
+    spanDrawScore.innerText = game.ties;
+  } else {
+    alert("No game was played");
+  }
+  console.log(game);
+  newRound();
+}
 function startGame() {
+  displayNameOnDom();
   cellsElements.forEach((cell) => {
     cell.addEventListener("click", handleClick, { once: true });
   });
   setHoverClass();
 }
 
+/* Cell click */
 function handleClick(e) {
   const cell = e.target;
   const currentClass = game.isXTurn ? "x_confirmed" : "o_confirmed";
@@ -59,21 +138,25 @@ function handleClick(e) {
     firstPlayerMoves,
     secondPlayerMoves
   );
-
+  saveGame();
   if (game.status.winner) {
-    console.log(`The winner is: ${game.status.winner.value}`);
+    //highlight the winning pattern with the color of the winner
     addWinnerClass(game.status.winner);
+    //updates the score in the DOM
+    updateScore(game.status.winner);
     //display the modal with the winner
+    displayModal(game.status.winner);
 
-    //update the score board
-
+    saveGame();
     //then return
     return;
   }
+
   //check draw
   if (game.moves.length === 9 && game.status.status === "complete") {
     //Display the modal for a draw
-    console.log("is a draw");
+    isDraw();
+    saveGame();
   }
 
   //switch turn
@@ -85,6 +168,38 @@ function handleClick(e) {
   setHoverClass();
 }
 
+/* Display the name of the players */
+function displayNameOnDom() {
+  spanElementFPlayer.innerText = firstPlayer.playerName;
+  spanElementSPlayer.innerText = secondPlayer.playerName;
+}
+
+/*Update the score on DOM*/
+function updateScore(player) {
+  if (player.value === "X") {
+    game.XWins = game.XWins + 1;
+  } else if (player.value === "0") {
+    game.OWins = game.OWins + 1;
+  } else {
+    game.ties = game.ties + 1;
+  }
+  spanXScore.innerText = game.XWins;
+  span0Score.innerText = game.OWins;
+  spanDrawScore.innerText = game.ties;
+}
+
+/*Display the modal for a Draw game*/
+function isDraw() {
+  modalWrapper.classList.remove("hidden");
+  const title = document.createElement("h2");
+  title.textContent = "Round tied";
+  modalContentElement.appendChild(title);
+  title.classList.add("modal_title");
+
+  game.ties++;
+  spanDrawScore.innerText = game.ties;
+}
+
 /*Place the correct mark on the clicked cell*/
 /* Set an busy attribute on the cell*/
 function placeMark(cell, currentClass) {
@@ -92,18 +207,17 @@ function placeMark(cell, currentClass) {
   cell.setAttribute("busy", true);
 }
 
+/*Set up game moves*/
 function updateGameMoves(cell, player) {
   return game.moves.push({ cell, player });
 }
 
-// Get the player moves
+/* Get the player moves */
 function getPlayerMoves(moves, player) {
-  return moves
-    .filter((move) => move.player === player.value)
-    .map((move) => +move.cell);
+  return moves.filter((move) => move.player === player.value).map((move) => +move.cell);
 }
 
-//Get the winning pattern
+/* Get the winning pattern */
 function getWinningPatern(combinations, p1Moves, p2Moves) {
   for (let i = 0; i < combinations.length; i++) {
     const winn_pat = combinations[i];
@@ -117,7 +231,7 @@ function getWinningPatern(combinations, p1Moves, p2Moves) {
   return null;
 }
 
-// get the status of the game and the winner if any
+/* Get the status of the game and the winner if any */
 function getGameStatus(moves, win_comb, p1Moves, p2Moves) {
   let winner = null;
   win_comb.forEach((comb) => {
@@ -133,7 +247,7 @@ function getGameStatus(moves, win_comb, p1Moves, p2Moves) {
   };
 }
 
-//Apply a class to the cells corresponding to the winning pattern
+/* Apply a class to the cells corresponding to the winning pattern */
 function addWinnerClass(player) {
   if (game.winning_pattern) {
     game.winning_pattern.forEach((element) => {
@@ -167,6 +281,42 @@ function setHoverClass() {
   });
 }
 
+/*Display the modal for winning state with the coresponding message*/
+function displayModal(player) {
+  //Show the modal
+  modalWrapper.classList.remove("hidden");
+  let winnerName = player.playerName;
+  let winnerIcon = player.value;
+  const paragraph = document.createElement("p");
+  const title = document.createElement("h2");
+  const span = document.createElement("span");
+  const mark = document.createElement("img");
+
+  if (player) {
+    mark.setAttribute("width", "24px");
+    mark.setAttribute("height", "24px");
+    mark.setAttribute("alt", "Player Icon");
+    title.textContent = "Takes the round";
+
+    paragraph.innerHTML = `${winnerName} wins!`;
+    paragraph.classList.add("modal_player-name");
+
+    modalContentElement.appendChild(paragraph);
+    modalContentElement.appendChild(title);
+    title.prepend(span);
+    span.classList.add("modal_player-icon");
+    span.appendChild(mark);
+    if (winnerIcon === "X") {
+      mark.setAttribute("src", "./assets/icon-x.svg");
+      title.classList.add("modal_title", "modal_title__player-X-color");
+    }
+    if (winnerIcon === "0") {
+      mark.setAttribute("src", "./assets/icon-o.svg");
+      title.classList.add("modal_title", "modal_title__player-0-color");
+    }
+  }
+}
+
 /*Update the Turn icon on the turn indicator element*/
 function updateTurnIndicator() {
   const icon = document.querySelector("#icon");
@@ -177,6 +327,7 @@ function updateTurnIndicator() {
   }
 }
 
+/* Get the players from Local Storage*/
 function getXPlayer() {
   let player;
   parsedPlayers.forEach((obj) => {
@@ -195,4 +346,13 @@ function getOPlayer() {
     }
   });
   return player;
+}
+
+/* Save the game to local storage */
+function saveGame() {
+  localStorage.setItem("gameSaved", JSON.stringify(game));
+}
+
+function getGame() {
+  return JSON.parse(localStorage.getItem("gameSaved"));
 }
